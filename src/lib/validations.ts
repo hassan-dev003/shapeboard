@@ -1,13 +1,13 @@
 import type { Shape } from "./types";
 
-/** The set of shape values accepted by the application. */
+// The set of shape values accepted by the application.
 const VALID_SHAPES = new Set<Shape["shape"]>([
     "circle",
     "square",
     "triangle",
 ]);
 
-/** Matches a 7-character hex color string: '#' followed by exactly 6 hex digits. */
+// Matches a 7-character hex color string: '#' followed by exactly 6 hex digits.
 const HEX_COLOR_REGEX = /^#[0-9A-Fa-f]{6}$/;
 
 interface ValidationResult {
@@ -15,19 +15,7 @@ interface ValidationResult {
     errors: string[];
 }
 
-/**
- * Validates only the fields that are present on a partial Shape object.
- *
- * Validation rules
- * ─────────────────
- * • name  – Must be a non-empty string with a maximum length of 100 characters.
- * • shape – Must be one of the allowed literals: "circle", "square", or "triangle".
- * • color – Must be a valid hex color string matching the pattern #RRGGBB
- *           (a '#' followed by exactly 6 hexadecimal characters, e.g. #FF0000).
- *
- * Fields that are `undefined` are silently skipped; only fields explicitly
- * provided on the input object are validated.
- */
+// Only validates fields that are actually present — undefined fields are skipped.
 export function validateShape(
     input: Partial<Pick<Shape, "name" | "shape" | "color">>,
 ): ValidationResult {

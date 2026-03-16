@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase";
 import { validateShape } from "@/lib/validations";
 
-// ---------------------------------------------------------------------------
 // GET /api/shapes — Return all shapes, newest first.
-// ---------------------------------------------------------------------------
 export async function GET() {
-    console.log("GET /api/shapes");
-
     try {
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await getSupabaseAdmin()
             .from("shapes")
             .select("*")
             .order("created_at", { ascending: false });
@@ -26,15 +22,11 @@ export async function GET() {
     }
 }
 
-// ---------------------------------------------------------------------------
 // POST /api/shapes — Create a new shape after validation.
-// ---------------------------------------------------------------------------
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        console.log("POST /api/shapes", body);
 
-        // Validate the incoming payload before inserting.
         const { valid, errors } = validateShape(body);
         if (!valid) {
             return NextResponse.json({ errors }, { status: 400 });
@@ -42,7 +34,7 @@ export async function POST(request: NextRequest) {
 
         const { name, shape, color } = body;
 
-        const { data, error } = await supabaseAdmin
+        const { data, error } = await getSupabaseAdmin()
             .from("shapes")
             .insert({ name, shape, color })
             .select()
