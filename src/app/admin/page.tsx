@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { Shape } from "@/lib/types";
 import ShapeForm from "@/components/ShapeForm";
 import ShapeRenderer from "@/components/ShapeRenderer";
+import Toast from "@/components/Toast";
 
 export default function AdminPage() {
     const [shapes, setShapes] = useState<Shape[]>([]);
     const [loading, setLoading] = useState(true);
     const [editShape, setEditShape] = useState<Shape | null>(null);
+    const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
     async function fetchShapes() {
         try {
@@ -17,6 +19,7 @@ export default function AdminPage() {
             setShapes(data);
         } catch (err) {
             console.error("Failed to fetch shapes:", err);
+            setToast({ message: "Something went wrong", type: "error" });
         } finally {
             setLoading(false);
         }
@@ -27,6 +30,7 @@ export default function AdminPage() {
     }, []);
 
     function handleFormSuccess() {
+        setToast({ message: editShape ? "Shape updated" : "Shape added", type: "success" });
         fetchShapes();
         setEditShape(null);
     }
@@ -43,12 +47,14 @@ export default function AdminPage() {
             const res = await fetch(`/api/shapes/${id}`, { method: "DELETE" });
             if (res.ok) {
                 setShapes((prev) => prev.filter((s) => s.id !== id));
+                setToast({ message: "Shape deleted", type: "success" });
 
                 // bail out of edit mode if we just deleted the shape being edited
                 if (editShape?.id === id) setEditShape(null);
             }
         } catch (err) {
             console.error("Failed to delete shape:", err);
+            setToast({ message: "Something went wrong", type: "error" });
         }
     }
 
@@ -100,10 +106,10 @@ export default function AdminPage() {
                                             className={`border-b border-gray-200 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
                                                 }`}
                                         >
-                                            <td className="whitespace-nowrap px-4 py-3">
+                                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-900">
                                                 {formatTimestamp(s.created_at)}
                                             </td>
-                                            <td className="px-4 py-3">{s.name}</td>
+                                            <td className="px-4 py-3 font-medium text-gray-900">{s.name}</td>
                                             <td className="px-4 py-3">
                                                 <ShapeRenderer shape={s.shape} color={s.color} />
                                             </td>
@@ -131,6 +137,14 @@ export default function AdminPage() {
                     </div>
                 )}
             </div>
+
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onDismiss={() => setToast(null)}
+                />
+            )}
         </div>
     );
 }
