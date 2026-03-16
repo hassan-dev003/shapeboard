@@ -44,7 +44,7 @@ export default function AdminPage() {
             if (res.ok) {
                 setShapes((prev) => prev.filter((s) => s.id !== id));
 
-                // if we were editing the shape we just deleted, bail out of edit mode
+                // bail out of edit mode if we just deleted the shape being edited
                 if (editShape?.id === id) setEditShape(null);
             }
         } catch (err) {
@@ -59,21 +59,19 @@ export default function AdminPage() {
     }
 
     return (
-        <div className="min-h-screen bg-zinc-50 px-6 py-12 dark:bg-black">
-            <div className="mx-auto max-w-4xl">
-                <h1 className="text-4xl font-bold text-zinc-900 dark:text-white">
-                    Admin Portal
-                </h1>
-                <p className="mt-1 text-zinc-500 dark:text-zinc-400">Manage shapes</p>
+        <div className="mx-auto max-w-5xl px-4 py-8">
+            <h1 className="text-4xl font-bold text-gray-900">Admin Portal</h1>
+            <p className="mt-1 text-gray-500">Manage shapes</p>
 
-                <div className="mt-8">
-                    <ShapeForm onSuccess={handleFormSuccess} editShape={editShape} />
-                </div>
+            <div className="mt-8">
+                <ShapeForm onSuccess={handleFormSuccess} editShape={editShape} />
+            </div>
 
-                <div className="mt-10">
-                    {loading ? (
-                        <p className="text-center text-zinc-500">Loading...</p>
-                    ) : (
+            <div className="mt-10 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+                {loading ? (
+                    <p className="text-center text-gray-500">Loading...</p>
+                ) : (
+                    <div className="overflow-x-auto">
                         <table className="w-full border-collapse">
                             <thead>
                                 <tr className="bg-gray-800 text-white">
@@ -102,7 +100,7 @@ export default function AdminPage() {
                                             className={`border-b border-gray-200 ${index % 2 === 0 ? "bg-white" : "bg-gray-50"
                                                 }`}
                                         >
-                                            <td className="px-4 py-3">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 {formatTimestamp(s.created_at)}
                                             </td>
                                             <td className="px-4 py-3">{s.name}</td>
@@ -112,7 +110,7 @@ export default function AdminPage() {
                                             <td className="px-4 py-3">
                                                 <button
                                                     onClick={() => handleEdit(s)}
-                                                    className="rounded-md bg-amber-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-amber-600"
+                                                    className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
                                                 >
                                                     Edit
                                                 </button>
@@ -120,7 +118,7 @@ export default function AdminPage() {
                                             <td className="px-4 py-3">
                                                 <button
                                                     onClick={() => handleDelete(s.id)}
-                                                    className="rounded-md bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
+                                                    className="rounded-lg bg-red-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-red-600"
                                                 >
                                                     Delete
                                                 </button>
@@ -130,8 +128,8 @@ export default function AdminPage() {
                                 )}
                             </tbody>
                         </table>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </div>
     );

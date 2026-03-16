@@ -44,7 +44,7 @@ export default function ShapeForm({ onSuccess, editShape }: ShapeFormProps) {
         setErrors([]);
     }
 
-    // matches api error strings to fields by keyword (e.g. "Name must be...")
+    // crude field-level matching — relies on the api error containing the field name
     function fieldErrors(keyword: string) {
         return errors.filter((e) =>
             e.toLowerCase().includes(keyword.toLowerCase()),
@@ -91,7 +91,7 @@ export default function ShapeForm({ onSuccess, editShape }: ShapeFormProps) {
     const isEdit = !!editShape;
 
     return (
-        <div className="rounded-xl bg-white p-6 shadow-md">
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                     <label
@@ -107,7 +107,7 @@ export default function ShapeForm({ onSuccess, editShape }: ShapeFormProps) {
                         maxLength={100}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                         placeholder="e.g. My Circle"
                     />
                     {fieldErrors("name").map((msg) => (
@@ -128,7 +128,7 @@ export default function ShapeForm({ onSuccess, editShape }: ShapeFormProps) {
                         id="shape-type"
                         value={shape}
                         onChange={(e) => setShape(e.target.value as ShapeType)}
-                        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                     >
                         {SHAPE_OPTIONS.map((s) => (
                             <option key={s} value={s}>
@@ -164,7 +164,7 @@ export default function ShapeForm({ onSuccess, editShape }: ShapeFormProps) {
                             value={color}
                             onChange={(e) => setColor(e.target.value)}
                             maxLength={7}
-                            className="w-28 rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            className="w-28 rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                             placeholder="#000000"
                         />
                     </div>
@@ -185,7 +185,7 @@ export default function ShapeForm({ onSuccess, editShape }: ShapeFormProps) {
                 <button
                     type="submit"
                     disabled={saving}
-                    className="w-full rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="w-full rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {saving ? "Saving..." : isEdit ? "Update Shape" : "Add Shape"}
                 </button>
